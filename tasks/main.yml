@@ -1,18 +1,50 @@
 ---
-- name: Ensure erlang is installed.
-  package:
-    name: erlang
-    state: present
-
 # Setup/install tasks.
 - include: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+#  when: ansible_os_family == 'RedHat'
 
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+# NOT CURRENTLY SUPPORTED
+#- include: setup-Debian.yml
+#  when: ansible_os_family == 'Debian'
 
 - name: Ensure rabbitmq is started and enabled (if configured).
   service:
     name: "{{ rabbitmq_daemon }}"
-    state: "{{ rabbitmq_state }}"
-    enabled: "{{ rabbitmq_enabled }}"
+    state: started
+    enabled: yes
+
+- name: Enable RabbitMQ Management
+  rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled
+
+- name: Create Admin User
+  rabbitmq_user:
+    user: "{{ rabbit_mq_admin_user }}"
+    password: "{{ rabbit_mq_admin_pass }}"
+    vhost: /
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    tags: administrator
+    state: present
+
+- name: Create Other Users
+  rabbitmq_user:
+    user: "{{  item.name  }}"
+    password: "{{  item.pass  }}"
+    vhost: /
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    state: present
+  with_items: "{{ rabbit_mq_users }}"
+
+- name: Ensure rabbitmq is restarted
+  service:
+    name: "{{ rabbitmq_daemon }}"
+    state: restarted
+
+- name: Print the Ansible Management URL
+  debug:
+    msg: "Visit http://{{ ansible_default_ipv4.address }}:15672/ to see the management inteface"

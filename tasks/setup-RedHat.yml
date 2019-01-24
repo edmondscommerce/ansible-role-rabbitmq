@@ -4,12 +4,22 @@
     key: "https://packagecloud.io/gpg.key"
     state: present
 
+- name: Download Erlang package.
+  get_url:
+    url: "{{ erlang_rpm_url }}"
+    dest: "/root/{{ erlang_rpm }}"
+
+- name: Ensure Erlang is installed.
+  yum:
+    name: "/root/{{ erlang_rpm }}"
+    state: "present"
+
 - name: Download RabbitMQ package.
   get_url:
     url: "{{ rabbitmq_rpm_url }}"
-    dest: "/tmp/{{ rabbitmq_rpm }}"
+    dest: "/root/{{ rabbitmq_rpm }}"
 
 - name: Ensure RabbitMQ is installed.
   yum:
-    name: "/tmp/{{ rabbitmq_rpm }}"
+    name: "/root/{{ rabbitmq_rpm }}"
     state: "present"

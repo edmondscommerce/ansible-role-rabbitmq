@@ -2,6 +2,13 @@
 
 [![Build Status](https://travis-ci.org/geerlingguy/ansible-role-rabbitmq.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-rabbitmq)
 
+--------
+**_THIS IS A FORK OF GEERLINGGUY.RABBITMQ_**
+
+**_It's just been extended a bit, but only for EL7 at the moment_**
+
+---------
+
 Installs RabbitMQ on Linux.
 
 ## Requirements
