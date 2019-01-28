@@ -46,5 +46,7 @@
     state: restarted
 
 - name: Print the Ansible Management URL
+  vars:
+    rm_admin_ip: "{{ ansible_default_ipv4.address | default('container ip') }}"
   debug:
-    msg: "Visit http://{{ ansible_default_ipv4.address }}:15672/ to see the management inteface"
+    msg: "Visit http://{{ rm_admin_ip }}:15672/ to see the management inteface"
